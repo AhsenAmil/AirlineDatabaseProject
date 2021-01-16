@@ -75,8 +75,7 @@ namespace Airline
 
         }
 
-      
-
+    
         //for SEARCH
         private void button1_Click(object sender, EventArgs e)
         {
@@ -133,9 +132,6 @@ namespace Airline
                  "(SELECT registration_number FROM Airplane WHERE Airplane.registration_number =" + selectedFlight.GetType().GetProperty("airplane_reg_number").GetValue(selectedFlight, null) + "),"+
                  "(SELECT passenger_id FROM Passenger WHERE Passenger.email_address =" + email + ")," +
                  "(SELECT flight_number FROM Flight WHERE Fligt.flight_number = " + selectedFlight.GetType().GetProperty("flight_number").GetValue(selectedFlight, null) + ")); ";
-
-
-            
 
             MySqlConnection conDatabase = new MySqlConnection(constring);
             MySqlCommand cmdDatabase = new MySqlCommand(Query, conDatabase);
