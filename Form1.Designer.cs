@@ -49,6 +49,8 @@
             this.comboBox3 = new System.Windows.Forms.ComboBox();
             this.button3 = new System.Windows.Forms.Button();
             this.comboBox4 = new System.Windows.Forms.ComboBox();
+            this.textBox12 = new System.Windows.Forms.TextBox();
+            this.label1 = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             this.SuspendLayout();
             // 
@@ -57,7 +59,7 @@
             this.pictureBox1.ErrorImage = null;
             this.pictureBox1.Image = ((System.Drawing.Image)(resources.GetObject("pictureBox1.Image")));
             this.pictureBox1.InitialImage = null;
-            this.pictureBox1.Location = new System.Drawing.Point(3, 2);
+            this.pictureBox1.Location = new System.Drawing.Point(2, 2);
             this.pictureBox1.Name = "pictureBox1";
             this.pictureBox1.Size = new System.Drawing.Size(804, 259);
             this.pictureBox1.TabIndex = 0;
@@ -68,7 +70,7 @@
             // 
             this.comboBox1.Font = new System.Drawing.Font("Bahnschrift SemiCondensed", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
             this.comboBox1.FormattingEnabled = true;
-            this.comboBox1.Location = new System.Drawing.Point(62, 324);
+            this.comboBox1.Location = new System.Drawing.Point(62, 289);
             this.comboBox1.Name = "comboBox1";
             this.comboBox1.Size = new System.Drawing.Size(121, 26);
             this.comboBox1.TabIndex = 1;
@@ -77,25 +79,26 @@
             // 
             this.comboBox2.Font = new System.Drawing.Font("Bahnschrift SemiCondensed", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
             this.comboBox2.FormattingEnabled = true;
-            this.comboBox2.Location = new System.Drawing.Point(229, 324);
+            this.comboBox2.Location = new System.Drawing.Point(229, 289);
             this.comboBox2.Name = "comboBox2";
             this.comboBox2.Size = new System.Drawing.Size(105, 26);
             this.comboBox2.TabIndex = 2;
             // 
             // listBox1
             // 
-            this.listBox1.Font = new System.Drawing.Font("Bahnschrift SemiCondensed", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+            this.listBox1.Font = new System.Drawing.Font("Bahnschrift SemiCondensed", 12.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
             this.listBox1.FormattingEnabled = true;
-            this.listBox1.ItemHeight = 19;
-            this.listBox1.Location = new System.Drawing.Point(12, 365);
+            this.listBox1.ItemHeight = 21;
+            this.listBox1.Location = new System.Drawing.Point(12, 357);
             this.listBox1.Name = "listBox1";
-            this.listBox1.Size = new System.Drawing.Size(393, 289);
+            this.listBox1.Size = new System.Drawing.Size(415, 277);
             this.listBox1.TabIndex = 3;
+            this.listBox1.SelectedIndexChanged += new System.EventHandler(this.listBox1_SelectedIndexChanged);
             // 
             // button1
             // 
             this.button1.Font = new System.Drawing.Font("Bahnschrift SemiCondensed", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
-            this.button1.Location = new System.Drawing.Point(340, 323);
+            this.button1.Location = new System.Drawing.Point(340, 289);
             this.button1.Name = "button1";
             this.button1.Size = new System.Drawing.Size(65, 27);
             this.button1.TabIndex = 4;
@@ -150,7 +153,7 @@
             // textBox1
             // 
             this.textBox1.Font = new System.Drawing.Font("Bahnschrift SemiCondensed", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
-            this.textBox1.Location = new System.Drawing.Point(12, 324);
+            this.textBox1.Location = new System.Drawing.Point(12, 289);
             this.textBox1.Name = "textBox1";
             this.textBox1.Size = new System.Drawing.Size(44, 26);
             this.textBox1.TabIndex = 11;
@@ -159,7 +162,7 @@
             // textBox6
             // 
             this.textBox6.Font = new System.Drawing.Font("Bahnschrift SemiCondensed", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
-            this.textBox6.Location = new System.Drawing.Point(189, 324);
+            this.textBox6.Location = new System.Drawing.Point(189, 289);
             this.textBox6.Name = "textBox6";
             this.textBox6.Size = new System.Drawing.Size(34, 26);
             this.textBox6.TabIndex = 12;
@@ -239,12 +242,34 @@
             this.comboBox4.Size = new System.Drawing.Size(36, 26);
             this.comboBox4.TabIndex = 20;
             // 
+            // textBox12
+            // 
+            this.textBox12.Font = new System.Drawing.Font("Bahnschrift", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+            this.textBox12.Location = new System.Drawing.Point(12, 337);
+            this.textBox12.Name = "textBox12";
+            this.textBox12.Size = new System.Drawing.Size(415, 23);
+            this.textBox12.TabIndex = 21;
+            this.textBox12.Text = "DEPARTURE DATE            |           ARRIVAL DATE            |  ANo | FNo | PRIC" +
+    "E ";
+            // 
+            // label1
+            // 
+            this.label1.AutoSize = true;
+            this.label1.Font = new System.Drawing.Font("Bahnschrift SemiCondensed", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+            this.label1.Location = new System.Drawing.Point(493, 238);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(46, 23);
+            this.label1.TabIndex = 22;
+            this.label1.Text = "DATE";
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(192)))), ((int)(((byte)(128)))));
             this.ClientSize = new System.Drawing.Size(809, 683);
+            this.Controls.Add(this.label1);
+            this.Controls.Add(this.textBox12);
             this.Controls.Add(this.comboBox4);
             this.Controls.Add(this.button3);
             this.Controls.Add(this.comboBox3);
@@ -266,7 +291,7 @@
             this.Controls.Add(this.comboBox1);
             this.Controls.Add(this.pictureBox1);
             this.Name = "Form1";
-            this.Text = "Form1";
+            this.Text = "Airline Reservation";
             this.Load += new System.EventHandler(this.Form1_Load);
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
             this.ResumeLayout(false);
@@ -296,6 +321,8 @@
         private System.Windows.Forms.ComboBox comboBox3;
         public System.Windows.Forms.Button button3;
         private System.Windows.Forms.ComboBox comboBox4;
+        private System.Windows.Forms.TextBox textBox12;
+        private System.Windows.Forms.Label label1;
     }
 }
 

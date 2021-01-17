@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
+using System.Diagnostics;
 using System.Drawing;
 using System.Linq;
 using System.Text;
@@ -18,18 +19,19 @@ namespace Airline
             InitializeComponent();
             fillComboBoxFrom();
             fillComboBoxTo();
-        
+         
         }
 
         private void Form1_Load(object sender, EventArgs e)
         {
-
+            label1.Text = DateTime.Now.ToLongDateString();
         }
 
     void fillComboBoxFrom()
         {
+            
             string constring = "datasource=localhost;port=3306;username=root;password=1234";
-            string Query = "select * from airline_data.Flight;";
+            string Query = "select distinct departure_airport from airline_data.Flight;";
             MySqlConnection conDatabase = new MySqlConnection(constring);
             MySqlCommand cmdDatabase = new MySqlCommand(Query, conDatabase);
             MySqlDataReader myReader;
@@ -54,7 +56,7 @@ namespace Airline
         void fillComboBoxTo()
         {
             string constring = "datasource=localhost;port=3306;username=root;password=1234";
-            string Query = "select * from airline_data.Flight;";
+            string Query = "select  distinct destination_airport from airline_data.Flight;";
             MySqlConnection conDatabase = new MySqlConnection(constring);
             MySqlCommand cmdDatabase = new MySqlCommand(Query, conDatabase);
             MySqlDataReader myReader;
@@ -83,33 +85,37 @@ namespace Airline
             string constring = "datasource=localhost;port=3306;username=root;password=1234";
             string fromSelected = comboBox1.SelectedItem.ToString();
             string toSelected = comboBox2.SelectedItem.ToString();
-            string Query = "select arrival_date,departure_date,airplane_reg_number from airline_data.Flight WHERE destination_airport='" + toSelected + "' AND departure_airport='" + fromSelected + "';";
+            string Query = "select arrival_date,departure_date,airplane_reg_number,flight_number, price from airline_data.Flight WHERE destination_airport='" + toSelected + "' AND departure_airport='" + fromSelected + "';";
             MySqlConnection conDatabase = new MySqlConnection(constring);
             MySqlCommand cmdDatabase = new MySqlCommand(Query, conDatabase);
             MySqlDataReader myReader;
+            
             try
             {
                 conDatabase.Open();
                 myReader = cmdDatabase.ExecuteReader();
                 while (myReader.Read())
                 {
-                    listBox1.Items.Add(myReader["departure_date"] + " - " + myReader["arrival_date"]);
-                    fillComboBoxSeat((string)myReader["airplane_reg_number"]);
-                   
-                
+                    listBox1.Items.Add(myReader["departure_date"] + " - " + myReader["arrival_date"] + " - " + myReader["airplane_reg_number"] + " - " + myReader["flight_number"] + " - " + myReader["price"]);               
                 }
-
             }
             catch (Exception ex)
             {
                 MessageBox.Show(ex.Message);
             }
         }
+       
 
         private void textBox3_TextChanged(object sender, EventArgs e)
         {
 
         }
+        public static string SetValueForText1 = "";
+        public static string SetValueForText2 = "";
+        public static string SetValueForText3 = "";
+        public static string SetValueForText4 = "";
+        public static string SetValueForText5 = "";
+        public static string SetValueForText6 = "";
 
         //for BUY TICKET
         private void button2_Click(object sender, EventArgs e)
@@ -121,52 +127,87 @@ namespace Airline
             string tel = (string)textBox2.Text;
             string seat1 = comboBox3.SelectedItem.ToString();
             string seat2 = comboBox4.SelectedItem.ToString();
-            Object selectedFlight = listBox1.SelectedItem;
-             //selectedFlight.GetType().GetProperty("registration_number").GetValue(selectedFlight, null);
-            string Query = "use airline_data; INSERT INTO Passenger(first_name,last_name,email_address,phone_number) VALUES('" 
+            string selectedFlight = (string)listBox1.SelectedItem;            
+            string[] parts = selectedFlight.Split('-');
+            string airplane_reg_number = parts[parts.Length - 3];
+            string flight_number = parts[parts.Length - 2];
+            string price = parts[parts.Length - 1];         
+            string Query = "use airline_data; INSERT INTO Passenger(first_name,last_name,email_address,phone_number) VALUES('"
                 + name + "' , '" + surname
                     + "' , '" +
-                 email + "' , '" + tel + "'); " +
-                 "INSERT INTO Ticket(is_refundable, is_available, seat_number_p1, seat_number_p2, airplane_reg_number, passenger_id, flight_number) VALUE " +
-                 "(TRUE, FALSE, " + "'" + seat1 + "', '" + seat2 + "', '" + 
-                 "(SELECT registration_number FROM Airplane WHERE Airplane.registration_number =" + selectedFlight.GetType().GetProperty("airplane_reg_number").GetValue(selectedFlight, null) + "),"+
-                 "(SELECT passenger_id FROM Passenger WHERE Passenger.email_address =" + email + ")," +
-                 "(SELECT flight_number FROM Flight WHERE Fligt.flight_number = " + selectedFlight.GetType().GetProperty("flight_number").GetValue(selectedFlight, null) + ")); ";
+                 email + "' , '" + tel + "'); ";
+            string Query2=
+                 "INSERT INTO Ticket(is_refundable, is_available, seat_number_p1, seat_number_p2, airplane_reg_number, passenger_id, flight_number) VALUES(TRUE, FALSE, (SELECT seat_number_p1 FROM Seat WHERE seat_number_p1 = " + seat1 + " AND seat_number_p2 = '" + seat2 + "' AND Seat.airplane_reg_number = '" + airplane_reg_number + "')," +
+                 "(SELECT seat_number_p2 FROM Seat WHERE seat_number_p1 =" + seat1 + " AND seat_number_p2 = '" + seat2 + "' AND Seat.airplane_reg_number = '" + airplane_reg_number + "')," +
+                 "(SELECT registration_number FROM Airplane WHERE registration_number = '" + airplane_reg_number + "')," +
+                 "(SELECT passenger_id FROM Passenger WHERE email_address='" + email +"' )," +
+                 "(SELECT flight_number FROM Flight WHERE flight_number = '" + flight_number + "')); ";
 
+            
             MySqlConnection conDatabase = new MySqlConnection(constring);
             MySqlCommand cmdDatabase = new MySqlCommand(Query, conDatabase);
+            MySqlCommand cmdDatabase2 = new MySqlCommand(Query2, conDatabase);
             MySqlDataReader myReader;
                 
                 try
                 {
-                    conDatabase.Open();
-                    
-                    myReader = cmdDatabase.ExecuteReader();
-                    MessageBox.Show("ok");
+                conDatabase.Open();                    
+                myReader = cmdDatabase.ExecuteReader();
+                conDatabase.Close();
+                conDatabase.Open();
+                myReader = cmdDatabase2.ExecuteReader();
+
+                SetValueForText1 = textBox3.Text;
+                SetValueForText2 = textBox4.Text;
+                SetValueForText3 = textBox5.Text;
+                SetValueForText4 = textBox2.Text;
+                SetValueForText5 = comboBox3.Text;
+                SetValueForText6 = comboBox4.Text;
+                Form3 form3 = new Form3();
+                form3.ShowDialog();
                 }
                 catch (Exception ex)
                 {
                     MessageBox.Show(ex.Message + "Please provide your information!");
                 }
-            
+          
+
         }
-        void fillComboBoxSeat(string registration)
+        void fillComboBoxSeat()
         {
+            
+            string selectedFlight = (string)listBox1.SelectedItem;
+            string[] parts = selectedFlight.Split('-');
+            string airplane_reg_number = parts[parts.Length - 2];
             string constring = "datasource=localhost;port=3306;username=root;password=1234";
-            string Query = "select * from airline_data.Seat WHERE Seat.airplane_reg_number= " + registration + ";";
+            string Query = "SELECT DISTINCT seat_number_p1 FROM airline_data.Seat WHERE airplane_reg_number= '" + airplane_reg_number + "';";
+            string Query2 = "SELECT DISTINCT seat_number_p2 FROM airline_data.Seat WHERE airplane_reg_number= '" + airplane_reg_number + "';";
             MySqlConnection conDatabase = new MySqlConnection(constring);
             MySqlCommand cmdDatabase = new MySqlCommand(Query, conDatabase);
+            MySqlCommand cmdDatabase2 = new MySqlCommand(Query2, conDatabase);
             MySqlDataReader myReader;
+
 
             try
             {
                 conDatabase.Open();
                 myReader = cmdDatabase.ExecuteReader();
+                comboBox3.Items.Clear();
                 while (myReader.Read())
                 {
-                    string part1 = (string)myReader["seat_number_p1"];
+                    string part1 = myReader.GetString("seat_number_p1");
+                    //string part1 = (string)myReader["seat_number_p1"];
                     comboBox3.Items.Add(part1);
-                    string part2 = (string)myReader["seat_number_p2"];
+                    
+                }
+                conDatabase.Close();
+                conDatabase.Open();
+                myReader = cmdDatabase2.ExecuteReader();
+                comboBox4.Items.Clear();
+                while (myReader.Read())
+                {                
+                    string part2 = myReader.GetString("seat_number_p2");
+                    //string part2 = (string)myReader["seat_number_p2"];
                     comboBox4.Items.Add(part2);
                 }
             }
@@ -189,5 +230,12 @@ namespace Airline
             form2.ShowDialog();
             
         }
+
+        private void listBox1_SelectedIndexChanged(object sender, EventArgs e)
+        {      
+                fillComboBoxSeat();           
+        }
+     
+
     }
 }
