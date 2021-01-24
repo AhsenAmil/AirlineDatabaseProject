@@ -29,7 +29,7 @@ namespace Airline
             string surname = textBox3.Text;
             string email = textBox4.Text;
             string phone = (string)textBox9.Text;
-            string Query = "DELETE FROM airline_data.Passenger WHERE first_name='" + name + "' AND last_name='"+surname + "' AND email_address='"+email+"' AND phone_number=" + phone +";";           
+            string Query = "DELETE FROM airline_data.Ticket WHERE ticket_number = '" + ticket_number + "';";           
             MySqlConnection conDatabase = new MySqlConnection(constring);
             MySqlCommand cmdDatabase = new MySqlCommand(Query, conDatabase);        
             MySqlDataReader myReader;
@@ -45,6 +45,12 @@ namespace Airline
             {
                 MessageBox.Show(ex.Message);
             }
+        }
+
+        private void button2_Click(object sender, EventArgs e)
+        {
+            Form4 form4 = new Form4();
+            form4.ShowDialog();
         }
     }
 }

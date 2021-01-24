@@ -116,10 +116,15 @@ namespace Airline
         public static string SetValueForText4 = "";
         public static string SetValueForText5 = "";
         public static string SetValueForText6 = "";
+        public static string flight_number = "";
+        public static string SetValueForText7 = "";
+        public static string SetValueForText8 = "";
+        
 
         //for BUY TICKET
         private void button2_Click(object sender, EventArgs e)
         {
+            
             string constring = "datasource=localhost;port=3306;username=root;password=1234";          
             string name = textBox3.Text;
             string surname = textBox4.Text;
@@ -127,12 +132,12 @@ namespace Airline
             string tel = (string)textBox2.Text;
             string seat1 = comboBox3.SelectedItem.ToString();
             string seat2 = comboBox4.SelectedItem.ToString();
-            string selectedFlight = (string)listBox1.SelectedItem;            
+            string selectedFlight = (string)listBox1.SelectedItem;
             string[] parts = selectedFlight.Split('-');
             string airplane_reg_number = parts[parts.Length - 3];
-            string flight_number = parts[parts.Length - 2];
+            flight_number = parts[parts.Length - 2];           
             string price = parts[parts.Length - 1];         
-            string Query = "use airline_data; INSERT INTO Passenger(first_name,last_name,email_address,phone_number) VALUES('"
+            string Query = " INSERT INTO Passenger(first_name,last_name,email_address,phone_number) VALUES('"
                 + name + "' , '" + surname
                     + "' , '" +
                  email + "' , '" + tel + "'); ";
@@ -142,34 +147,105 @@ namespace Airline
                  "(SELECT registration_number FROM Airplane WHERE registration_number = '" + airplane_reg_number + "')," +
                  "(SELECT passenger_id FROM Passenger WHERE email_address='" + email +"' )," +
                  "(SELECT flight_number FROM Flight WHERE flight_number = '" + flight_number + "')); ";
-
-            
+            string Query3 = "SELECT ticket_number, gate_number FROM (Ticket JOIN Passenger ON Ticket.passenger_id = Passenger.passenger_id)JOIN Flight ON Ticket.flight_number = Flight.flight_number WHERE email_address = '" + email + "' AND Flight.flight_number =  " + flight_number + "; ";
+            string Query4 = "SELECT ticket_number FROM Ticket WHERE flight_number = '" + flight_number + "' AND seat_number_p1 =" + seat1 + " AND seat_number_p2 = '" + seat2 + "'; ";
+            string Query5 = "use airline_data; SELECT passenger_id FROM Passenger WHERE email_address = '" + email + "'; ";
             MySqlConnection conDatabase = new MySqlConnection(constring);
-            MySqlCommand cmdDatabase = new MySqlCommand(Query, conDatabase);
-            MySqlCommand cmdDatabase2 = new MySqlCommand(Query2, conDatabase);
+            MySqlCommand cmdDatabase = new MySqlCommand(Query, conDatabase);  //insert passenger
+            MySqlCommand cmdDatabase2 = new MySqlCommand(Query2, conDatabase);  //insert ticket
+            MySqlCommand cmdDatabase3 = new MySqlCommand(Query3, conDatabase);   //form3 için
+            MySqlCommand cmdDatabase4 = new MySqlCommand(Query4, conDatabase);  //ticket kontrol
+            MySqlCommand cmdDatabase5 = new MySqlCommand(Query5, conDatabase); //passenger kontrol
             MySqlDataReader myReader;
-                
-                try
-                {
-                conDatabase.Open();                    
-                myReader = cmdDatabase.ExecuteReader();
-                conDatabase.Close();
-                conDatabase.Open();
-                myReader = cmdDatabase2.ExecuteReader();
 
-                SetValueForText1 = textBox3.Text;
-                SetValueForText2 = textBox4.Text;
-                SetValueForText3 = textBox5.Text;
-                SetValueForText4 = textBox2.Text;
-                SetValueForText5 = comboBox3.Text;
-                SetValueForText6 = comboBox4.Text;
-                Form3 form3 = new Form3();
-                form3.ShowDialog();
-                }
-                catch (Exception ex)
-                {
-                    MessageBox.Show(ex.Message + "Please provide your information!");
-                }
+            try
+            {
+               
+             
+                    conDatabase.Open();
+                    myReader = cmdDatabase5.ExecuteReader();
+                    if (myReader.Read())
+                    {
+                        conDatabase.Close();
+                        conDatabase.Open();
+                        myReader = cmdDatabase4.ExecuteReader();
+                        if (myReader.Read())
+                        {
+                            MessageBox.Show("The seat already taken");
+                        }
+                        else
+                        {
+                            conDatabase.Close();
+                            conDatabase.Open();
+                            myReader = cmdDatabase2.ExecuteReader();
+
+                            SetValueForText1 = textBox3.Text;
+                            SetValueForText2 = textBox4.Text;
+                            SetValueForText3 = textBox5.Text;
+                            SetValueForText4 = textBox2.Text;
+                            SetValueForText5 = comboBox3.Text;
+                            SetValueForText6 = comboBox4.Text;
+
+                            conDatabase.Close();
+                            conDatabase.Open();
+                            myReader = cmdDatabase3.ExecuteReader();
+                            while (myReader.Read())
+                            {
+                                SetValueForText7 = myReader["ticket_number"].ToString();
+                                SetValueForText8 = myReader["gate_number"].ToString();
+                            }
+
+                            Form3 form3 = new Form3();
+                            form3.ShowDialog();
+                        }
+
+
+                    }
+                    else
+                    {
+                        conDatabase.Close();
+                        conDatabase.Open();
+                        myReader = cmdDatabase4.ExecuteReader();
+                        if (myReader.Read())
+                        {
+                            MessageBox.Show("The seat already taken");
+                        }
+                        else
+                        {
+                            conDatabase.Close();
+                            conDatabase.Open();
+                            myReader = cmdDatabase.ExecuteReader();
+                            conDatabase.Close();
+                            conDatabase.Open();
+                            myReader = cmdDatabase2.ExecuteReader();
+
+                            SetValueForText1 = textBox3.Text;
+                            SetValueForText2 = textBox4.Text;
+                            SetValueForText3 = textBox5.Text;
+                            SetValueForText4 = textBox2.Text;
+                            SetValueForText5 = comboBox3.Text;
+                            SetValueForText6 = comboBox4.Text;
+
+                            conDatabase.Close();
+                            conDatabase.Open();
+                            myReader = cmdDatabase3.ExecuteReader();
+                            while (myReader.Read())
+                            {
+                                SetValueForText7 = myReader["ticket_number"].ToString();
+                                SetValueForText8 = myReader["gate_number"].ToString();
+                            }
+
+                            Form3 form3 = new Form3();
+                            form3.ShowDialog();
+                        }
+
+                    }
+
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message + "Please provide your information!");
+            }
           
 
         }
@@ -232,10 +308,12 @@ namespace Airline
         }
 
         private void listBox1_SelectedIndexChanged(object sender, EventArgs e)
-        {      
-                fillComboBoxSeat();           
+        {
+            comboBox3.ResetText();
+            comboBox4.ResetText();
+            fillComboBoxSeat();           
         }
-     
+        
 
     }
 }

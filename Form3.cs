@@ -15,6 +15,7 @@ namespace Airline
         {
             InitializeComponent();
         }
+ 
 
         private void Form3_Load(object sender, EventArgs e)
         {
@@ -25,6 +26,8 @@ namespace Airline
             label6.Text = Form1.SetValueForText5;
             label7.Text = Form1.SetValueForText6;
 
+            label1.Text = Form1.SetValueForText7;
+            label15.Text = Form1.SetValueForText8;
 
 
         }
@@ -43,5 +46,12 @@ namespace Airline
         {
          
         }
+
+        private void label1_Click(object sender, EventArgs e)
+        {
+
+       
+        }
+        
     }
 }
