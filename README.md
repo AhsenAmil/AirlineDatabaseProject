@@ -1,2 +1,1 @@
 # AirlineDatabaseProject
-buy a ticket
